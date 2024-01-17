@@ -61,7 +61,7 @@ To run this project, you will need to add the following environment variables to
 #### table_types
 
 ```python
-  table_types={"column1":str, "column2":int...}
+  table_types={"column1":String(100), "column2":INT...}
 ```
 
 | Parameter | Type     | Description                       |
