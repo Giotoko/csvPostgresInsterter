@@ -13,20 +13,15 @@ username = getenv("username")
 password = getenv("password")
 database = getenv("database")
 
-def csv_postgres_inserter(table="", csv_path="", separator=","):
+def csv_postgres_inserter(table="", csv_path="", separator=",", table_types={}, csv_types={}):
     try:
         engine = create_engine(f'postgresql://{username}:{password}@{hostname}/{database}')
 
-        data = read_csv(csv_path, separator=separator, dtypes={"poinOfSale":str,"product":str,"date":str, "stock":int})
+        data = read_csv(csv_path, separator=separator, dtypes=csv_types)
 
         print("csv opened in ", time() - start_time, " seconds")
 
-        data.to_pandas().to_sql(table, engine, if_exists='replace', index=False, chunksize=1000, dtype={
-            'pointOfSale':String(255),
-            'product': String(255),
-            'date':DATE,
-            'stock':INT 
-        })
+        data.to_pandas().to_sql(table, engine, if_exists='replace', index=False, chunksize=1000, dtype=table_types)
 
         total_time = time() - start_time
         print ("finished in ", total_time, " seconds ")
@@ -38,4 +33,4 @@ def csv_postgres_inserter(table="", csv_path="", separator=","):
     finally:
         engine.dispose()
         
-csv_postgres_inserter(table="stocks", csv_path="stock.csv", separator=";")
+csv_postgres_inserter(table="stocks", csv_path="stock.csv", separator=";", table_types={'pointOfSale':String(255),'product': String(255),'date':DATE,'stock':INT }, csv_types={"poinOfSale":str,"product":str,"date":str, "stock":int})

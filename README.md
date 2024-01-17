@@ -9,10 +9,8 @@ Python script that reads a .csv file and inserts its contents into a PostgreSQL 
 To deploy this project run
 
 ```bash
-  python -m pip install python_dotenv
-  python -m pip install sqlalchemy
-  python -m pip install polars
-  python -m pip install pandas
+  python -m pip install python_dotenv sqlalchemy polars pandas psycopg2 pyarrow
+
 ```
 
 
@@ -20,13 +18,13 @@ To deploy this project run
 
 To run this project, you will need to add the following environment variables to your .env file
 
-`hostname`
+`hostname` the database host 
 
-`username`
+`username` the database username
 
-`password`
+`password` the dabase password for specified username
 
-`database`
+`database` the database name
 ## Parameter Reference
 
 #### table
@@ -60,6 +58,27 @@ To run this project, you will need to add the following environment variables to
 | `separator` | `string` | **optional**. value separator of csv file |
 
 
+#### table_types
+
+```python
+  table_types={"column1":str, "column2":int...}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `table_types` | `dictionary` | **required**. map specifying the data types
+ || | of every column of the postgresql table (sqlalchemy types)|
+
+#### table_types
+
+```python
+  csv_types={"column1":str, "column2":int...}
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `csv_types` | `dictionary` | **required**. map specifying the data types of every column of the csv |
+
 
 
 ## Usage/Examples
@@ -67,9 +86,15 @@ To run this project, you will need to add the following environment variables to
 ```python
 from csv_postgres_inserter import csv_postgres_inserter
 
-csv_postgres_inserter(table="stocks", csv_path="stock.csv", separator=";")
+csv_postgres_inserter(table="table", csv_path="file.csv", separator="," table_type={"column1":String(255), "column2":INT}, csv_type={"column1":str, "column2":int})
 
 ```
+
+
+## Features
+
+- works with any csv and any postgresql table
+- there's no need to create the table, the script handles that for you
 
 
 ## Authors
